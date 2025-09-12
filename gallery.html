@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>'s Gallery | Aspiring Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f1f5f9;
+            --gray: #64748b;
+            --success: #10b981;
+            --accent: #f97316;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0f172a, #1e293b);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-img {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a.active {
+            color: var(--primary);
+        }
+
+        nav a.active::after {
+            width: 100%;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Gallery Hero Section */
+        .gallery-hero {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            padding: 150px 0 50px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .gallery-hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), transparent);
+            opacity: 0.1;
+        }
+
+        .gallery-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary), transparent);
+            opacity: 0.1;
+        }
+
+        .gallery-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .gallery-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(to right, #e0e7ff, var(--light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-hero h1 span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #cbd5e1;
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            padding: 40px 0 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .slider {
+            position: relative;
+            margin: 0 auto 40px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(30, 41, 59, 0.5);
+            padding: 20px;
+        }
+
+        .slider-image {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        .slider-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 10px;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--primary);
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .slider-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .slider-indicators span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-indicators span.active {
+            background: var(--primary);
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.7);
+        }
+
+        /* Subjects Section */
+        .subjects-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .subjects-section > div {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 30px;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .subjects-section > div:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .subject-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subject-title i {
+            font-size: 1.8rem;
+        }
+
+        .subject-paragraph {
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 60px 0 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .copyright {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .gallery-hero h1 {
+                font-size: 3rem;
+            }
+            
+            .slider-image {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: var(--darker);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 999;
+            }
+            
+            nav ul.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .gallery-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subjects-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-hero {
+                padding: 130px 0 30px;
+            }
+            
+            .gallery-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .gallery-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .slider-image {
+                height: 300px;
+            }
+            
+            .subject-title {
+                font-size: 1.3rem;
+            }
+            
+            .subject-paragraph {
+                font-size: 1rem;
+            }
+            
+            .nav-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    <img src="logo.png" alt="'s Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <span style="display: none;">T</span>
+                </div>
+                <div class="logo-text">Ximanta</div>
+            </a>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#skills">Skills</a></li>
+                    <li><a href="index.html#goals">Goals</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="gallery.html" class="active">Gallery</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Gallery Hero Section -->
+    <section class="gallery-hero">
+        <div class="container gallery-hero-content">
+            <h1>My <span>Gallery</span></h1>
+            <p>A visual journey through my projects, inspirations, and creative process</p>
+        </div>
+    </section>
+
+    <!-- Gallery Container -->
+    <div class="container gallery-container">
+        <div class="slider" id="image-slider">
+            <!-- Image will be injected by JS -->
+            <img id="slider-img" class="slider-image" alt="Gallery Image" />
+            <div class="slider-controls">
+                <button class="nav-btn" id="prev-btn" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn" id="next-btn" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="slider-indicators" id="slider-indicators"></div>
+        
+<!-- Content Sections -->
+<section class="subject-sections">
+  <div class="subject">
+
+    <div class="subject-section">
+      <h2>💡 Creative Process</h2>
+      <p>I start by deeply understanding the problem, then brainstorm, sketch, and explore multiple ideas ✍️. Feedback and collaboration help refine solutions, while clear documentation ensures every step is intentional.</p>
+    </div>
+
+    <div class="subject-section">
+      <h2>💻 Development Philosophy</h2>
+      <p>Clean, readable, and maintainable code is my mantra 🧑‍💻. I build with users in mind, focusing on performance ⚡, accessibility ♿, and delightful experiences. For me, development is an iterative journey of learning and improving 🔄.</p>
+    </div>
+
+    <div class="subject-section">
+      <h2>🚀 Future Vision</h2>
+      <p>I aim to build tech that empowers communities 🌍—especially in education 📚. I’m excited about AI + web development 🤖 and hope to mentor upcoming developers to share the guidance I’ve received 🙌.</p>
+    </div>
+
+  </div>
+</section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">Ximanta Bhuyan</div>
+            <div class="footer-links">
+                <a href="#home">Home 📄</a>
+                <a href="#about">About 🧑‍💻</a>
+                <a href="#skills">Skills 🖥️</a>
+                <a href="#goals">Goals 🎯</a>
+                <a href="#contact">Contact 📨</a>
+                <a href="gallery.html">Gallery 🖼️</a>
+            </div>
+            <p class="copyright">© 2023 Ximanta Bhuyan. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            const menuIcon = mobileMenuBtn.querySelector('i');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                menuIcon.classList.toggle('fa-bars');
+                menuIcon.classList.toggle('fa-times');
+            });
+            
+            // Close mobile menu when clicking on links
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    menuIcon.classList.add('fa-bars');
+                    menuIcon.classList.remove('fa-times');
+                });
+            });
+            
+            // Gallery slider functionality
+            // List of up to 30 image paths (add real ones as you upload)
+            const images = [
+                // Example: "images/photo1.jpg", "images/photo2.jpg", ...
+                // Only add real image paths here. Leave others blank.
+                "image1.jpg",
+                "image2.jpg",
+                "image3.jpg",
+                "image4.jpg",
+                "image5.jpg",
+                "image6.jpg",
+                "image7.jpg",
+                "image8.jpg",
+                "image9.jpg",
+                "image10.jpg", "", "", "",
+                "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", ""
+            ];
+            
+            // Show only images that exist (simulate: skip empty strings)
+            let validImages = images.filter(src => src && src.length > 0);
+            
+            // If none uploaded yet, show nothing.
+            let current = 0;
+            const imgEl = document.getElementById('slider-img');
+            const indicatorsEl = document.getElementById('slider-indicators');
+
+            function updateSlider() {
+                // Hide image if no images yet
+                if (validImages.length === 0) {
+                    imgEl.style.display = 'none';
+                    indicatorsEl.innerHTML = '';
+                    return;
+                }
+                
+                imgEl.style.display = 'block';
+                imgEl.src = validImages[current] || '';
+                
+                imgEl.onerror = () => {
+                    // If image missing, hide image
+                    imgEl.style.display = 'none';
+                };
+                
+                imgEl.onload = () => {
+                    imgEl.style.display = 'block';
+                };
+                
+                // Indicators
+                indicatorsEl.innerHTML = '';
+                validImages.forEach((_, idx) => {
+                    const dot = document.createElement('span');
+                    dot.className = idx === current ? 'active' : '';
+                    dot.onclick = () => { 
+                        current = idx; 
+                        updateSlider(); 
+                    };
+                    indicatorsEl.appendChild(dot);
+                });
+            }
+
+            document.getElementById('prev-btn').onclick = function() {
+                if (validImages.length === 0) return;
+                current = (current - 1 + validImages.length) % validImages.length;
+                updateSlider();
+            };
+            
+            document.getElementById('next-btn').onclick = function() {
+                if (validImages.length === 0) return;
+                current = (current + 1) % validImages.length;
+                updateSlider();
+            };
+
+            // Auto slide every 5 seconds if there are images
+            if (validImages.length > 0) {
+                setInterval(() => {
+                    current = (current + 1) % validImages.length;
+                    updateSlider();
+                }, 5000);
+            }
+
+            updateSlider();
+        });
+    </script>
+</body>
+</html>
