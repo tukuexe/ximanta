@@ -583,120 +583,143 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Header scroll effect
-            const header = document.getElementById('header');
-            
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-            
-            // Mobile menu toggle
-            const mobileMenuBtn = document.getElementById('menu-btn');
-            const navMenu = document.getElementById('nav-menu');
-            const menuIcon = mobileMenuBtn.querySelector('i');
-            
-            mobileMenuBtn.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                menuIcon.classList.toggle('fa-bars');
-                menuIcon.classList.toggle('fa-times');
-            });
-            
-            // Close mobile menu when clicking on links
-            document.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navMenu.classList.remove('active');
-                    menuIcon.classList.add('fa-bars');
-                    menuIcon.classList.remove('fa-times');
-                });
-            });
-            
-            // Gallery slider functionality
-            // List of up to 30 image paths (add real ones as you upload)
-            const images = [
-                // Example: "images/photo1.jpg", "images/photo2.jpg", ...
-                // Only add real image paths here. Leave others blank.
-                "image1.jpg",
-                "image2.jpg",
-                "image3.jpg",
-                "image4.jpg",
-                "image5.jpg",
-                "image6.jpg",
-                "image7.jpg",
-                "image8.jpg",
-                "image9.jpg",
-                "image10.jpg", "", "", "",
-                "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", ""
-            ];
-            
-            // Show only images that exist (simulate: skip empty strings)
-            let validImages = images.filter(src => src && src.length > 0);
-            
-            // If none uploaded yet, show nothing.
-            let current = 0;
-            const imgEl = document.getElementById('slider-img');
-            const indicatorsEl = document.getElementById('slider-indicators');
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const navMenu = document.getElementById('nav-menu');
+    
+    menuBtn.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+        menuBtn.innerHTML = navMenu.classList.contains('active') ? 
+            '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    });
 
-            function updateSlider() {
-                // Hide image if no images yet
-                if (validImages.length === 0) {
-                    imgEl.style.display = 'none';
-                    indicatorsEl.innerHTML = '';
-                    return;
-                }
-                
-                imgEl.style.display = 'block';
-                imgEl.src = validImages[current] || '';
-                
-                imgEl.onerror = () => {
-                    // If image missing, hide image
-                    imgEl.style.display = 'none';
-                };
-                
-                imgEl.onload = () => {
-                    imgEl.style.display = 'block';
-                };
-                
-                // Indicators
-                indicatorsEl.innerHTML = '';
-                validImages.forEach((_, idx) => {
-                    const dot = document.createElement('span');
-                    dot.className = idx === current ? 'active' : '';
-                    dot.onclick = () => { 
-                        current = idx; 
-                        updateSlider(); 
-                    };
-                    indicatorsEl.appendChild(dot);
-                });
-            }
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
 
-            document.getElementById('prev-btn').onclick = function() {
-                if (validImages.length === 0) return;
-                current = (current - 1 + validImages.length) % validImages.length;
-                updateSlider();
-            };
-            
-            document.getElementById('next-btn').onclick = function() {
-                if (validImages.length === 0) return;
-                current = (current + 1) % validImages.length;
-                updateSlider();
-            };
+    // Gallery Slider Logic
+    const sliderWrapper = document.getElementById('image-slider'); // use existing slider container
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const sliderIndicators = document.getElementById('slider-indicators');
+    
+    const imageSources = [
+        "image1.jpg",
+        "image2.jpg",
+        "image3.jpg",
+        "image4.jpg",
+        "image5.jpg",
+        "image6.jpg",
+        "image7.jpg",
+        "image8.jpg",
+        "image9.jpg",
+        "image10.jpg"
+    ];
 
-            // Auto slide every 5 seconds if there are images
-            if (validImages.length > 0) {
-                setInterval(() => {
-                    current = (current + 1) % validImages.length;
-                    updateSlider();
-                }, 5000);
-            }
+    let currentSlide = 0;
+    let slides = [];
+    let indicators = [];
+    let isAnimating = false;
+    let touchStartX = 0;
+    let touchEndX = 0;
 
-            updateSlider();
+    // Preload images
+    function preloadImages() {
+        imageSources.forEach(src => {
+            const img = new Image();
+            img.src = src;
         });
+    }
+
+    // Initialize slider
+    function initSlider() {
+        // Remove default placeholder image
+        sliderWrapper.innerHTML = `
+            <div class="slider-controls">
+                <button class="nav-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-btn" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        `;
+
+        imageSources.forEach((src, index) => {
+            const slide = document.createElement('img');
+            slide.className = 'slider-image';
+            slide.src = src;
+            slide.alt = `Gallery image ${index + 1}`;
+            slide.dataset.index = index;
+            
+            sliderWrapper.insertBefore(slide, sliderWrapper.firstChild);
+            slides.push(slide);
+
+            const indicator = document.createElement('span');
+            indicator.dataset.index = index;
+            indicator.addEventListener('click', () => goToSlide(index));
+            sliderIndicators.appendChild(indicator);
+            indicators.push(indicator);
+        });
+
+        showSlide(currentSlide);
+
+        // rebind nav buttons after injecting
+        document.getElementById('prev-btn').addEventListener('click', prevSlide);
+        document.getElementById('next-btn').addEventListener('click', nextSlide);
+    }
+
+    // Show specific slide
+    function showSlide(index) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        slides.forEach(slide => slide.style.display = "none");
+        slides[index].style.display = "block";
+
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+
+        currentSlide = index;
+        setTimeout(() => { isAnimating = false; }, 300);
+    }
+
+    function goToSlide(index) {
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        showSlide(index);
+    }
+
+    function nextSlide() {
+        goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+        goToSlide(currentSlide - 1);
+    }
+
+    // Touch events
+    sliderWrapper.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    sliderWrapper.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX - touchStartX > 50) prevSlide();
+        if (touchStartX - touchEndX > 50) nextSlide();
+    });
+
+    // Auto slide
+    let slideInterval = setInterval(nextSlide, 5000);
+    sliderWrapper.addEventListener('mouseenter', () => clearInterval(slideInterval));
+    sliderWrapper.addEventListener('mouseleave', () => slideInterval = setInterval(nextSlide, 5000));
+
+    preloadImages();
+    initSlider();
+});
     </script>
 </body>
 </html>
