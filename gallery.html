@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ximants's Gallery | Aspiring Developer</title>
+    <title>Ximanta's Gallery | Aspiring Developer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -460,6 +460,62 @@
             margin-top: 20px;
         }
 
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .loader:before, .loader:after {
+            content: '';
+            position: absolute;
+            border: 4px solid var(--primary);
+            opacity: 1;
+            border-radius: 50%;
+            animation: pulse 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+
+        .loader:after {
+            animation-delay: -0.75s;
+        }
+
+        @keyframes pulse {
+            0% {
+                top: 36px;
+                left: 36px;
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                top: 0;
+                left: 0;
+                width: 72px;
+                height: 72px;
+                opacity: 0;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .gallery-hero h1 {
@@ -535,13 +591,18 @@
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
     <!-- Header -->
     <header id="header">
         <div class="container header-content">
             <a href="index.html" class="logo">
                 <div class="logo-img">
-                    <img src="logo.png" alt="'s Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                    <span style="display: none;">T</span>
+                    <img src="logo.png" alt="Ximanta's Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <span style="display: none;">X</span>
                 </div>
                 <div class="logo-text">Ximanta</div>
             </a>
@@ -564,34 +625,34 @@
     <!-- Gallery Hero Section -->
     <section class="gallery-hero">
         <div class="container gallery-hero-content">
-            <h1>My <span>Gallery</span></h1>
-            <p>A visual journey through my projects, inspirations, and creative process</p>
+            <h1>My <span>Gallery</span> Collection</h1>
+            <p>A visual journey through my projects, inspirations, and creative expressions</p>
         </div>
     </section>
 
     <!-- Gallery Container -->
     <div class="container gallery-container">
         <div class="gallery-grid" id="gallery-grid">
-            <!-- Images will be dynamically added by JavaScript -->
+            <!-- Gallery items will be added dynamically with JavaScript -->
         </div>
-        
-        <!-- Content Sections -->
-        <section class="subjects-section">
+    </div>
+
+    <!-- Subjects Section -->
+    <div class="container">
+        <div class="subjects-section">
             <div>
-                <h2 class="subject-title"><i class="fas fa-lightbulb"></i> Creative Process</h2>
-                <p class="subject-paragraph">I start by deeply understanding the problem, then brainstorm, sketch, and explore multiple ideas ✍️. Feedback and collaboration help refine solutions, while clear documentation ensures every step is intentional.</p>
+                <h3 class="subject-title"><i class="fas fa-code"></i> Web Development</h3>
+                <p class="subject-paragraph">I create responsive and interactive websites using modern technologies like HTML5, CSS3, JavaScript, and React. My focus is on clean code and user experience.</p>
             </div>
-            
             <div>
-                <h2 class="subject-title"><i class="fas fa-laptop-code"></i> Development Philosophy</h2>
-                <p class="subject-paragraph">Clean, readable, and maintainable code is my mantra 🧑‍💻. I build with users in mind, focusing on performance ⚡, accessibility ♿, and delightful experiences. For me, development is an iterative journey of learning and improving 🔄.</p>
+                <h3 class="subject-title"><i class="fas fa-paint-brush"></i> UI/UX Design</h3>
+                <p class="subject-paragraph">Designing intuitive and beautiful interfaces is my passion. I follow best practices to ensure accessibility and usability across all devices.</p>
             </div>
-            
             <div>
-                <h2 class="subject-title"><i class="fas fa-rocket"></i> Future Vision</h2>
-                <p class="subject-paragraph">I aim to create technology that empowers people and solves real-world problems 🌍. My goal is to build tools that are intuitive, inclusive, and impactful—blending creativity with technical excellence to shape a better digital future 🚀.</p>
+                <h3 class="subject-title"><i class="fas fa-mobile-alt"></i> Responsive Design</h3>
+                <p class="subject-paragraph">Every website I build is fully responsive, ensuring a seamless experience on desktops, tablets, and smartphones of all sizes.</p>
             </div>
-        </section>
+        </div>
     </div>
 
     <!-- Modal for enlarged image view -->
@@ -599,7 +660,7 @@
         <div class="modal-close" id="modal-close">
             <i class="fas fa-times"></i>
         </div>
-        <img class="modal-content" id="modal-img">
+        <img class="modal-content" id="modal-image" src="">
     </div>
 
     <!-- Footer -->
@@ -607,53 +668,127 @@
         <div class="container footer-content">
             <div class="footer-logo">Ximanta</div>
             <div class="footer-links">
-                <a href="index.html">Home 📄</a>
-                <a href="index.html#about">About 🖥️</a>
-                <a href="index.html#skills">Skills 🧑‍💻</a>
-                <a href="index.html#goals">Goals 🎯</a>
-                <a href="index.html#contact">Contact ✉️</a>
-                <a href="gallery.html">Gallery 🖼️</a>
+                <a href="index.html">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="index.html#skills">Skills</a>
+                <a href="index.html#goals">Goals</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="gallery.html">Gallery</a>
             </div>
             <p class="copyright">© 2023 Ximanta. All rights reserved.</p>
         </div>
     </footer>
 
 <script>
-    // Local gallery images (replace with your directory files)
-    const galleryImages = [
-        { src: "image1.jpg", title: "Tuku", desc: "Me..!" },
-        { src: "image2.jpg", title: "Tukuexe", desc: "while at Kaziranga" },
-        { src: "image3.jpg", title: "tukuexe", desc: "tukuexe" },
-        { src: "image4.jpg", title: "tuku bhuyan", desc: "ximanta_" },
-        { src: "image5.jpg", title: "Tuku Bhuyan", desc: "Tuku Bhuyan" },
-        { src: "image6.jpg", title: "ximanta", desc: "Tukuu" },
-        { src: "image7.jpg", title: "Ximanta", desc: "Description for image 7" },
-        { src: "image8.jpg", title: "ximanta_", desc: "Ximanta" },
-        { src: "image9.jpg", title: "extras_exe", desc: "Tuku Bhuyan" },
-        { src: "image10.jpg", title: "tukuuu", desc: "Instagram Bhuyan" }
+    // Gallery data with local images
+    const galleryItems = [
+        { src: "image1.jpg", title: "Modern Web Design", desc: "Clean and responsive layout" },
+        { src: "image2.jpg", title: "E-commerce Solution", desc: "Online shopping platform" },
+        { src: "image3.jpg", title: "Dashboard UI", desc: "Analytics and data visualization" },
+        { src: "image4.jpg", title: "Mobile App Design", desc: "iOS and Android applications" },
+        { src: "image5.jpg", title: "Creative Portfolio", desc: "Showcasing creative work" },
+        { src: "image6.jpg", title: "Code Development", desc: "Clean and efficient code" },
+        { src: "image7.jpg", title: "UI Components", desc: "Reusable design elements" },
+        { src: "image8.jpg", title: "Dark Theme Design", desc: "Elegant and eye-friendly" },
+        { src: "image9.jpg", title: "Branding Design", desc: "Logo and brand identity" },
+        { src: "image10.jpg", title: "Illustrations", desc: "Creative and artistic visuals" }
     ];
 
-    // Function to initialize the gallery
+    // DOM elements
+    const galleryGrid = document.getElementById('gallery-grid');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const modal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    const modalClose = document.getElementById('modal-close');
+    const header = document.getElementById('header');
+    const menuBtn = document.getElementById('menu-btn');
+    const navMenu = document.getElementById('nav-menu');
+
+    // Initialize the gallery
     function initGallery() {
-        const galleryGrid = document.getElementById('gallery-grid');
-        
-        galleryImages.forEach((image, index) => {
+        galleryItems.forEach(item => {
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item';
-            galleryItem.style.transitionDelay = `${index * 0.08}s`;
-            
             galleryItem.innerHTML = `
-                <img src="${image.src}" alt="${image.title}" class="gallery-img">
+                <img src="${item.src}" alt="${item.title}" class="gallery-img">
                 <div class="gallery-overlay">
-                    <h3 class="gallery-title">${image.title}</h3>
-                    <p class="gallery-desc">${image.desc}</p>
+                    <h3 class="gallery-title">${item.title}</h3>
+                    <p class="gallery-desc">${item.desc}</p>
                 </div>
             `;
-            
-            galleryGrid.appendChild(galleryItem);
-            
-            // Add click event to open modal
+
+            // Click event for modal
             galleryItem.addEventListener('click', () => {
-                const modal = document.getElementById('image-modal');
-                const modalImg = document.getElementById('modal-img');
-    
+                modalImage.src = item.src;
+                modalImage.alt = item.title;
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+
+            galleryGrid.appendChild(galleryItem);
+        });
+    }
+
+    // Close modal
+    modalClose.addEventListener('click', () => {
+        modal.classList.remove('open');
+        document.body.style.overflow = 'auto';
+    });
+
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Mobile menu toggle
+    menuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        menuBtn.innerHTML = navMenu.classList.contains('active') ?
+            '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Animate gallery items on scroll
+    function animateOnScroll() {
+        const items = document.querySelectorAll('.gallery-item');
+        items.forEach(item => {
+            const itemTop = item.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+
+            if (itemTop < windowHeight - 100) {
+                item.classList.add('visible');
+            }
+        });
+    }
+
+    // Initialize everything on page load
+    window.addEventListener('load', () => {
+        initGallery();
+
+        // Hide loading overlay after 2 seconds
+        setTimeout(() => {
+            loadingOverlay.classList.add('hidden');
+
+            // Animate gallery items after loading
+            setTimeout(() => {
+                animateOnScroll();
+            }, 300);
+        }, 2000);
+
+        window.addEventListener('scroll', animateOnScroll);
+    });
+</script>
+</script>
+</body>
+</html>
