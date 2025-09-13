@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ximants's Gallery | Aspiring Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f1f5f9;
+            --gray: #64748b;
+            --success: #10b981;
+            --accent: #f97316;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0f172a, #1e293b);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-img {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a.active {
+            color: var(--primary);
+        }
+
+        nav a.active::after {
+            width: 100%;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Gallery Hero Section */
+        .gallery-hero {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            padding: 150px 0 50px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .gallery-hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), transparent);
+            opacity: 0.1;
+        }
+
+        .gallery-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--secondary), transparent);
+            opacity: 0.1;
+        }
+
+        .gallery-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .gallery-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(to right, #e0e7ff, var(--light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-hero h1 span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #cbd5e1;
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            padding: 40px 0 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* New Gallery Grid Layout */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transform: translateY(100px) rotateX(90deg);
+            opacity: 0;
+            transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        opacity 1s ease,
+                        box-shadow 0.3s ease;
+        }
+
+        .gallery-item.visible {
+            transform: translateY(0) rotateX(0);
+            opacity: 1;
+        }
+
+        .gallery-item:hover {
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            transform: translateY(-10px) scale(1.03);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .gallery-desc {
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        /* Modal for enlarged image view */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--primary);
+        }
+
+        /* Subjects Section */
+        .subjects-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .subjects-section > div {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 30px;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .subjects-section > div:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .subject-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subject-title i {
+            font-size: 1.8rem;
+        }
+
+        .subject-paragraph {
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 60px 0 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .copyright {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .gallery-hero h1 {
+                font-size: 3rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: var(--darker);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 999;
+            }
+            
+            nav ul.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .gallery-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subjects-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-hero {
+                padding: 130px 0 30px;
+            }
+            
+            .gallery-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .gallery-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .subject-title {
+                font-size: 1.3rem;
+            }
+            
+            .subject-paragraph {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    <img src="logo.png" alt="'s Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <span style="display: none;">T</span>
+                </div>
+                <div class="logo-text">Ximanta</div>
+            </a>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="index.html">Home 📄</a></li>
+                    <li><a href="index.html#about">About 📄</a></li>
+                    <li><a href="index.html#skills">Skills 🧑‍💻</a></li>
+                    <li><a href="index.html#goals">Goals 🎯</a></li>
+                    <li><a href="index.html#contact">Contact ✉️</a></li>
+                    <li><a href="gallery.html" class="active">Gallery 🖼️</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Gallery Hero Section -->
+    <section class="gallery-hero">
+        <div class="container gallery-hero-content">
+            <h1>My <span>Gallery</span></h1>
+            <p>A visual journey through my projects, inspirations, and creative process</p>
+        </div>
+    </section>
+
+    <!-- Gallery Container -->
+    <div class="container gallery-container">
+        <div class="gallery-grid" id="gallery-grid">
+            <!-- Images will be dynamically added by JavaScript -->
+        </div>
+        
+        <!-- Content Sections -->
+        <section class="subjects-section">
+            <div>
+                <h2 class="subject-title"><i class="fas fa-lightbulb"></i> Creative Process</h2>
+                <p class="subject-paragraph">I start by deeply understanding the problem, then brainstorm, sketch, and explore multiple ideas ✍️. Feedback and collaboration help refine solutions, while clear documentation ensures every step is intentional.</p>
+            </div>
+            
+            <div>
+                <h2 class="subject-title"><i class="fas fa-laptop-code"></i> Development Philosophy</h2>
+                <p class="subject-paragraph">Clean, readable, and maintainable code is my mantra 🧑‍💻. I build with users in mind, focusing on performance ⚡, accessibility ♿, and delightful experiences. For me, development is an iterative journey of learning and improving 🔄.</p>
+            </div>
+            
+            <div>
+                <h2 class="subject-title"><i class="fas fa-rocket"></i> Future Vision</h2>
+                <p class="subject-paragraph">I aim to create technology that empowers people and solves real-world problems 🌍. My goal is to build tools that are intuitive, inclusive, and impactful—blending creativity with technical excellence to shape a better digital future 🚀.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for enlarged image view -->
+    <div class="modal" id="image-modal">
+        <div class="modal-close" id="modal-close">
+            <i class="fas fa-times"></i>
+        </div>
+        <img class="modal-content" id="modal-img">
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">Ximanta</div>
+            <div class="footer-links">
+                <a href="index.html">Home 📄</a>
+                <a href="index.html#about">About 🖥️</a>
+                <a href="index.html#skills">Skills 🧑‍💻</a>
+                <a href="index.html#goals">Goals 🎯</a>
+                <a href="index.html#contact">Contact ✉️</a>
+                <a href="gallery.html">Gallery 🖼️</a>
+            </div>
+            <p class="copyright">© 2023 Ximanta. All rights reserved.</p>
+        </div>
+    </footer>
+
+<script>
+    // Local gallery images (replace with your directory files)
+    const galleryImages = [
+        { src: "image1.jpg", title: "Tuku", desc: "Me..!" },
+        { src: "image2.jpg", title: "Tukuexe", desc: "while at Kaziranga" },
+        { src: "image3.jpg", title: "tukuexe", desc: "tukuexe" },
+        { src: "image4.jpg", title: "tuku bhuyan", desc: "ximanta_" },
+        { src: "image5.jpg", title: "Tuku Bhuyan", desc: "Tuku Bhuyan" },
+        { src: "image6.jpg", title: "ximanta", desc: "Tukuu" },
+        { src: "image7.jpg", title: "Ximanta", desc: "Description for image 7" },
+        { src: "image8.jpg", title: "ximanta_", desc: "Ximanta" },
+        { src: "image9.jpg", title: "extras_exe", desc: "Tuku Bhuyan" },
+        { src: "image10.jpg", title: "tukuuu", desc: "Instagram Bhuyan" }
+    ];
+
+    // Function to initialize the gallery
+    function initGallery() {
+        const galleryGrid = document.getElementById('gallery-grid');
+        
+        galleryImages.forEach((image, index) => {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item hidden';
+            galleryItem.style.transitionDelay = `${index * 0.08}s`;
+            
+            galleryItem.innerHTML = `
+                <img src="${image.src}" alt="${image.title}" class="gallery-img">
+                <div class="gallery-overlay">
+                    <h3 class="gallery-title">${image.title}</h3>
+                    <p class="gallery-desc">${image.desc}</p>
+                </div>
+            `;
+            
+            galleryGrid.appendChild(galleryItem);
+            
+            // Add click event to open modal
+            galleryItem.addEventListener('click', () => {
+                const modal = document.getElementById('image-modal');
+                const modalImg = document.getElementById('modal-img');
+    
